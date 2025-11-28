@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Inventario - Uniformes y Diseños</title>
+    <link rel="stylesheet" href="style.css"> <!-- Estilos generales -->
+    <link rel="stylesheet" href="inventory_style.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo">Uniformes & Diseños</div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="inventory.html">Inventario</a></li>
+                    <li><a href="clients.html">Clientes</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="controls">
+            <input type="search" id="search-input" placeholder="Buscar por nombre...">
+            
+            <div class="rate-control">
+                <label for="exchange-rate">Tasa USD a VES:</label>
+                <input type="number" id="exchange-rate" step="0.01" value="36.50">
+            </div>
+
+            <select id="sort-select">
+                <option value="name-asc">Ordenar por Nombre (A-Z)</option>
+                <option value="name-desc">Ordenar por Nombre (Z-A)</option>
+                <option value="price-asc">Ordenar por Precio (Menor a Mayor)</option>
+                <option value="price-desc">Ordenar por Precio (Mayor a Menor)</option>
+            </select>
+            <button id="add-product-btn" class="add-btn">Añadir Producto</button>
+        </div>
+
+        <div id="product-list" class="product-grid">
+            <!-- Product cards will be injected here -->
+        </div>
+    </main>
+
+    <div id="form-modal" class="modal">
+        <product-form></product-form>
+    </div>
+
+    <footer-component></footer-component>
+
+    <!-- Web Component Templates -->
+    <template id="product-card-template">
+        <style>
+            /* Basic styles are in inventory_style.css */
+            .product-card {
+                /* Animation properties */
+                transform: translateY(20px);
+                opacity: 0;
+                animation: slideUp 0.4s ease-out forwards;
+            }
+
+            @keyframes slideUp {
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+            .price-display {
+                margin-bottom: 0.8rem;
+            }
+            .price-ves {
+                font-size: 1.4rem;
+                font-weight: bold;
+                color: var(--primary-color);
+                display: block;
+            }
+            .price-usd {
+                font-size: 0.9rem;
+                color: #888;
+            }
+        </style>
+        <div class="product-card">
+            <img src="" alt="Imagen del producto">
+            <div class="card-content">
+                <h3>Nombre del Producto</h3>
+                <div class="price-display">
+                    <span class="price-ves"></span>
+                    <span class="price-usd"></span>
+                </div>
+                <p class="stock">Stock: 0</p>
+                <div class="card-actions">
+                    <button class="stock-btn stock-in" title="Añadir stock">+</button>
+                    <button class="stock-btn stock-out" title="Reducir stock">-</button>
+                    <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        </div>
+    </template>
+    
+    <template id="product-form-template">
+        <style>
+             /* Form styles are in inventory_style.css */
+            #product-form-container {
+                position: relative;
+            }
+            .close-btn {
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+                color: #888;
+                transition: color 0.3s;
+            }
+            .close-btn:hover {
+                color: #333;
+            }
+            .form-field label {
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+            .form-field input {
+                 width: 95%;
+            }
+            .price-note {
+                font-size: 0.8rem;
+                color: #777;
+                margin-top: -8px;
+                margin-bottom: 10px;
+            }
+        </style>
+        <div id="product-form-container">
+            <button class="close-btn">&times;</button>
+            <h2 id="form-title">Añadir Producto</h2>
+            <form id="product-form">
+                <input type="hidden" id="product-id" name="product-id">
+                <div class="form-field">
+                    <label for="product-name">Nombre del Producto</label>
+                    <input type="text" id="product-name" name="product-name" required>
+                    <span class="error-message">El nombre es obligatorio.</span>
+                </div>
+                <div class="form-field">
+                    <label for="product-price">Precio (USD)</label>
+                    <input type="number" id="product-price" name="product-price" step="0.01" required>
+                    <p class="price-note">El precio se convertirá a VES usando la tasa de cambio.</p>
+                    <span class="error-message">El precio debe ser un número válido.</span>
+                </div>
+                <div class="form-field">
+                    <label for="product-stock">Stock Inicial</label>
+                    <input type="number" id="product-stock" name="product-stock" required>
+                    <span class="error-message">El stock debe ser un número válido.</span>
+                </div>
+                 <div class="form-field">
+                    <label for="product-image">URL de la Imagen</label>
+                    <input type="url" id="product-image" name="product-image">
+                    <span class="error-message">Introduce una URL válida.</span>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="save-btn">Guardar</button>
+                    <button type="button" class="cancel-btn">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </template>
+
+    <!-- DEFINIMOS LOS CUSTOM ELEMENTS DEL FOOTER -->
+    <script>
+        class FooterComponent extends HTMLElement { constructor() { super(); this.innerHTML = `<footer><p>&copy; 2024 Venta de Uniformes y Diseños</p></footer>`; } }
+        customElements.define('footer-component', FooterComponent);
+    </script>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <!-- Firebase Config & App Logic -->
+    <script src="firebase-config.js"></script>
+    <script src="inventory.js"></script>
+    
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>

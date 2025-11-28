@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uniformes y Diseños</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo">Uniformes & Diseños</div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="inventory.html">Inventario</a></li>
+                    <li><a href="clients.html">Clientes</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Calidad y Estilo en Cada Prenda</h1>
+            <p>Uniformes personalizados que reflejan la identidad de tu empresa.</p>
+            <a href="inventory.html" class="cta-button">Gestionar Inventario</a>
+        </div>
+    </section>
+
+    <main>
+        <section class="featured-products">
+            <h2>Productos Destacados</h2>
+            <div id="product-preview-list" class="product-grid">
+                <!-- Las tarjetas de producto se insertan aquí -->
+            </div>
+        </section>
+
+        <section class="our-values">
+            <h2>Nuestro Compromiso</h2>
+            <div class="values-grid">
+                <div class="value-item">
+                    <h3>Calidad Superior</h3>
+                    <p>Materiales resistentes y acabados impecables para el día a día.</p>
+                </div>
+                <div class="value-item">
+                    <h3>Diseño a Medida</h3>
+                    <p>Creamos uniformes únicos que potencian la imagen de tu marca.</p>
+                </div>
+                <div class="value-item">
+                    <h3>Servicio Confiable</h3>
+                    <p>Atención personalizada y entregas puntuales garantizadas.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonials">
+            <h2>Lo que dicen nuestros clientes</h2>
+            <div class="testimonial-item">
+                <blockquote>"Los uniformes son de excelente calidad y el diseño superó nuestras expectativas. ¡Totalmente recomendados!"</blockquote>
+                <cite>- Gerente de Operaciones, Clínica SaludTotal</cite>
+            </div>
+             <div class="testimonial-item">
+                <blockquote>"El equipo entendió perfectamente nuestra visión y la plasmó en diseños modernos y funcionales. El personal está encantado."</blockquote>
+                <cite>- CEO, Restaurante La Buena Mesa</cite>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Venta de Uniformes y Diseños</p>
+    </footer>
+
+    <!-- Template para las tarjetas de producto -->
+    <template id="landing-product-card-template">
+        <style>
+            .product-card {
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                overflow: hidden;
+                text-align: center;
+                transition: transform 0.3s, box-shadow 0.3s;
+                opacity: 0;
+                transform: translateY(20px);
+                animation: fadeIn 0.5s ease-out forwards;
+            }
+            .product-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            }
+            .product-card img {
+                width: 100%;
+                height: 200px;
+                object-fit: cover;
+            }
+            .product-card h3 {
+                font-size: 1.2rem;
+                margin: 1rem 0 0.5rem 0;
+            }
+            .product-card .price {
+                font-size: 1.1rem;
+                font-weight: bold;
+                color: #007bff;
+                margin-bottom: 1rem;
+            }
+        </style>
+        <div class="product-card">
+            <img src="" alt="Imagen del producto">
+            <h3></h3>
+            <p class="price"></p>
+        </div>
+    </template>
+
+    <script src="main.js"></script>
+
+</body>
+</html>

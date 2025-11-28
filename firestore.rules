@@ -1,0 +1,11 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Permitir leer y escribir en todas las colecciones 
+    // si la solicitud se realiza antes del 31 de diciembre de 2024.
+    // ¡ESTO ES INSEGURO PARA PRODUCCIÓN!
+    match /{document=**} {
+      allow read, write: if request.time < timestamp.date(2024, 12, 31);
+    }
+  }
+}

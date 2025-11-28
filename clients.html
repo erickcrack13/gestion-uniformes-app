@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Clientes - Uniformes y Diseños</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="clients_style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo">Uniformes & Diseños</div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="inventory.html">Inventario</a></li>
+                    <li><a href="clients.html">Clientes</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="controls">
+            <input type="search" id="search-input" placeholder="Buscar por nombre o empresa...">
+            <button id="add-client-btn" class="add-btn">Añadir Cliente</button>
+        </div>
+
+        <div id="client-list" class="client-grid">
+            <!-- Client cards will be injected here -->
+        </div>
+    </main>
+
+    <div id="form-modal" class="modal">
+        <!-- El formulario web component se insertará aquí -->
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Venta de Uniformes y Diseños</p>
+    </footer>
+
+    <!-- Template para la tarjeta de cliente -->
+    <template id="client-card-template">
+        <style>
+            .client-card {
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.05), 0 5px 15px rgba(0,0,0,0.08);
+                padding: 1.5rem;
+                display: flex;
+                flex-direction: column;
+                transition: transform 0.3s, box-shadow 0.3s;
+                animation: slideUp 0.4s ease-out forwards;
+            }
+             @keyframes slideUp {
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+            .client-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.07), 0 10px 20px rgba(0,0,0,0.1);
+            }
+            .card-header h3 {
+                margin: 0;
+                color: #4A90E2;
+                font-size: 1.3rem;
+            }
+            .card-header p {
+                margin: 0.2rem 0 0 0;
+                color: #555;
+                font-weight: 600;
+            }
+            .client-details {
+                margin: 1rem 0;
+                font-size: 0.95rem;
+                color: #333;
+            }
+            .client-details p {
+                 margin: 0.4rem 0;
+            }
+             .client-details strong {
+                color: #555;
+            }
+            .card-actions {
+                margin-top: auto;
+                display: flex;
+                gap: 0.8rem;
+            }
+            .action-btn {
+                background: none;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                padding: 0.5rem 1rem;
+                cursor: pointer;
+                font-weight: 600;
+                transition: all 0.3s;
+            }
+            .edit-btn { color: #4A90E2; border-color: #4A90E2; }
+            .edit-btn:hover { background-color: #4A90E2; color: white; }
+            .delete-btn { color: #E94E77; border-color: #E94E77; }
+            .delete-btn:hover { background-color: #E94E77; color: white; }
+        </style>
+        <div class="client-card">
+            <div class="card-header">
+                <h3 class="client-name"></h3>
+                <p class="client-company"></p>
+            </div>
+            <div class="client-details">
+                <p><strong>Email:</strong> <span class="client-email"></span></p>
+                <p><strong>Teléfono:</strong> <span class="client-phone"></span></p>
+            </div>
+            <div class="card-actions">
+                <button class="action-btn edit-btn">Editar</button>
+                <button class="action-btn delete-btn">Eliminar</button>
+            </div>
+        </div>
+    </template>
+
+    <!-- Template para el formulario de cliente -->
+    <template id="client-form-template">
+         <style>
+            #client-form-container {
+                position: relative;
+                background: #fff;
+                padding: 2.5rem;
+                border-radius: 8px;
+                width: 90%;
+                max-width: 500px;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+                animation: slideDown 0.4s ease-out;
+            }
+            @keyframes slideDown { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+            .close-btn {
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                background: none; border: none; font-size: 1.8rem;
+                cursor: pointer; color: #888; transition: color 0.3s;
+            }
+            .close-btn:hover { color: #333; }
+            .form-field { margin-bottom: 1.5rem; }
+            .form-field label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+            .form-field input {
+                width: 95%;
+                padding: 0.8rem;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+            }
+             .form-field input:focus {
+                outline: none;
+                border-color: #4A90E2;
+                box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.25);
+            }
+            .error-message { color: #E94E77; font-size: 0.8rem; display: none; margin-top: 5px; }
+            input.invalid { border-color: #E94E77; }
+            .form-actions { display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem; }
+            .save-btn, .cancel-btn {
+                padding: 0.8rem 1.5rem; border-radius: 5px; border: none;
+                cursor: pointer; font-weight: bold; transition: all 0.3s;
+            }
+            .save-btn { background-color: #50E3C2; color: white; }
+            .save-btn:hover { background-color: #45c4a8; }
+            .cancel-btn { background-color: #aaa; color: white; }
+            .cancel-btn:hover { background-color: #888; }
+        </style>
+        <div id="client-form-container">
+            <button class="close-btn">&times;</button>
+            <h2 id="form-title">Añadir Cliente</h2>
+            <form id="client-form">
+                <input type="hidden" id="client-id" name="client-id">
+                <div class="form-field">
+                    <label for="client-name">Nombre Completo</label>
+                    <input type="text" id="client-name" name="client-name" required>
+                    <span class="error-message">El nombre es obligatorio.</span>
+                </div>
+                <div class="form-field">
+                    <label for="client-company">Empresa (Opcional)</label>
+                    <input type="text" id="client-company" name="client-company">
+                </div>
+                <div class="form-field">
+                    <label for="client-email">Correo Electrónico</label>
+                    <input type="email" id="client-email" name="client-email" required>
+                    <span class="error-message">Introduce un email válido.</span>
+                </div>
+                <div class="form-field">
+                    <label for="client-phone">Teléfono</label>
+                    <input type="tel" id="client-phone" name="client-phone" required>
+                    <span class="error-message">El teléfono es obligatorio.</span>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="save-btn">Guardar</button>
+                    <button type="button" class="cancel-btn">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </template>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+    <!-- Firebase Config & App Logic -->
+    <script src="firebase-config.js"></script>
+    <script src="clients.js"></script>
+    
+    <!-- Font Awesome (si se necesitan iconos adicionales) -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+</body>
+</html>
